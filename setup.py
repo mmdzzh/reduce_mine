@@ -1,3 +1,5 @@
+# import distutils
+
 def configuration(parent_package='', top_path=None):
     import numpy
     from numpy.distutils.misc_util import Configuration
@@ -9,5 +11,7 @@ def configuration(parent_package='', top_path=None):
     return config
 
 if __name__ == "__main__":
-    from numpy.distutils.core import setup
-    setup(configuration=configuration)
+    from distutils.core import setup, Extension
+    setup(name='zjhnp', version='1.0', ext_modules=[Extension('zjhnp', ['py_reduce.c'])])
+    # from numpy.distutils.core import setup
+    # setup(configuration=configuration)
