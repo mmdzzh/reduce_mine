@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <immintrin.h>
 #include <nmmintrin.h>
+#include "reduce.h"
 
 float eps_sum_sse(float* tmp, int i, int j){
     float eps = 0.0;
@@ -22,8 +23,20 @@ static PyObject* sum_zjh_cpu_sse_gpu(PyObject *self, PyObject *args){
         printf("failed\n");
         return NULL;
     }
-
+	const int sz = 1024;
 	float *input = (float*)(npObject->data);
+	int num = npObject->dimensions[0];
+	float* d_input, *d_output;//, *d_part;
+    int blockSize = (num + sz - 1) / sz;
+
+    gpu_data_initial(input, &output, &d_input, &d_output, num);
+    cpu_data_to_gpu(input, d_input, num);
+
+    reduceSum_v2(d_input, d_output, num);	
+
+	gpu_data_to_cpu(&output, d_output);
+
+	return Py_BuildValue("f", output);
 
 }
 
