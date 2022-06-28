@@ -15,6 +15,18 @@ float eps_sum_sse(float* tmp, int i, int j){
     return eps;
 }
 
+static PyObject* sum_zjh_cpu_sse_gpu(PyObject *self, PyObject *args){
+	PyArrayObject* npObject;
+
+    if(!PyArg_ParseTuple(args, "O", &npObject)){
+        printf("failed\n");
+        return NULL;
+    }
+
+	float *input = (float*)(npObject->data);
+
+}
+
 static PyObject* sum_zjh_cpu_sse(PyObject *self, PyObject *args){
     PyArrayObject* npObject;
 
@@ -28,7 +40,7 @@ static PyObject* sum_zjh_cpu_sse(PyObject *self, PyObject *args){
     
 
     // dimensions[1] = 1;
-    npy_float32 *input = (npy_float32*)(npObject->data);
+    float *input = (float*)(npObject->data);
  
   
     npy_intp n2 = n / 32;
@@ -41,8 +53,8 @@ static PyObject* sum_zjh_cpu_sse(PyObject *self, PyObject *args){
     n2 |= (n2>>16);
     n2++;
 
-    npy_float32* tmp = (npy_float32*)malloc(n2 * sizeof(npy_float32));
-    memset(tmp, 0, sizeof(npy_float32) * n2);
+    float* tmp = (float*)malloc(n2 * sizeof(float));
+    memset(tmp, 0, sizeof(float) * n2);
 
 	__m128 sum1 = _mm_setzero_ps(), sum2 = _mm_setzero_ps(), sum3 = _mm_setzero_ps(), sum4 = _mm_setzero_ps();
 	__m128 load1, load2, load3, load4;
@@ -176,7 +188,7 @@ static PyObject* sum_zjh_cpu_sse(PyObject *self, PyObject *args){
     
     // printf("out is %f\n", tmp[0]);
     // printf("out is %f\n", out->data[0]);
-    npy_float32 out = tmp[0];
+    float out = tmp[0];
     // free(tmp);
    
 
