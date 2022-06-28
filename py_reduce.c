@@ -16,7 +16,7 @@ float eps_sum_sse(float* tmp, int i, int j){
     return eps;
 }
 
-static PyObject* sum_zjh_cpu_sse_gpu(PyObject *self, PyObject *args){
+static PyObject* sum_zjh_gpu(PyObject *self, PyObject *args){
 	PyArrayObject* npObject;
 
     if(!PyArg_ParseTuple(args, "O", &npObject)){
@@ -28,6 +28,8 @@ static PyObject* sum_zjh_cpu_sse_gpu(PyObject *self, PyObject *args){
 	int num = npObject->dimensions[0];
 	float* d_input, *d_output;//, *d_part;
     int blockSize = (num + sz - 1) / sz;
+    float output;
+
 
     gpu_data_initial(input, &output, &d_input, &d_output, num);
     cpu_data_to_gpu(input, d_input, num);
@@ -322,12 +324,12 @@ static npy_float32* sum_zjh_cpu(char **args, npy_intp *dimensions, npy_intp *ste
 }
 
 static PyMethodDef SumMethods[] = {
-    {"sum", sum_zjh_cpu_sse, METH_VARARGS, NULL},
+    {"sum", sum_zjh_gpu, METH_VARARGS, NULL},
     {NULL, NULL, 0, NULL}
 };
 
 
-PyUFuncGenericFunction funcs[1] = {&sum_zjh_cpu_sse};
+// PyUFuncGenericFunction funcs[1] = {&sum_zjh_cpu_sse};
 
 /* These are the input and return dtypes of logit.*/
 static char types[2] = {NPY_FLOAT32, NPY_FLOAT32};
