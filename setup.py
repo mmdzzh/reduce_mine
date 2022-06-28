@@ -1,5 +1,8 @@
 # import distutils
 
+from code import compile_command
+
+
 def configuration(parent_package='', top_path=None):
     import numpy
     from numpy.distutils.misc_util import Configuration
@@ -12,6 +15,9 @@ def configuration(parent_package='', top_path=None):
 
 if __name__ == "__main__":
     from distutils.core import setup, Extension
-    setup(name='zjhnp', version='1.0', ext_modules=[Extension('zjhnp', ['py_reduce.c'])])
+    setup(name='zjhnp', version='1.0', 
+        ext_modules=[Extension('zjhnp', ['py_reduce.c'], 
+        extra_compile_args=["-I/home/xianyun/anaconda3/lib/python3.8/site-packages/numpy/core/include", "-msse", "-msse2", "-msse3", "-O3"], 
+        extra_link_args=["-msse", "-msse2", "-msse3"])])
     # from numpy.distutils.core import setup
     # setup(configuration=configuration)
